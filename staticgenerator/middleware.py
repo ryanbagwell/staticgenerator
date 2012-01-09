@@ -18,6 +18,10 @@ class StaticGeneratorMiddleware(object):
     gen = StaticGenerator()
     
     def process_response(self, request, response):
+        
+        if not getattr(settings, 'ENABLE_STATIC_GENERATOR',False):
+            return response
+        
         if response.status_code == 200:
             for url in self.urls:
                 if url.match(request.path_info):

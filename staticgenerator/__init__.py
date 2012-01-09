@@ -3,7 +3,7 @@
 
 """Static file generator for Django."""
 import stat
-
+from django.conf import settings
 from django.utils.functional import Promise
 
 from filesystem import FileSystem
@@ -40,10 +40,17 @@ class StaticGenerator(object):
     """
 
     def __init__(self, *resources, **kw):
+       
+        if not getattr(settings, 'ENABLE_STATIC_GENERATOR',False):
+            return
+       
         self.parse_dependencies(kw)
 
         self.resources = self.extract_resources(resources)
         self.server_name = self.get_server_name()
+
+        # if not getattr(self.settings, 'ENABLE_STATIC_GENERATOR',False):
+        #     return
 
         try:
             self.web_root = getattr(self.settings, 'WEB_ROOT')
